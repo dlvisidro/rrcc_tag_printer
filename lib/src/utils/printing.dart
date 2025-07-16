@@ -21,7 +21,6 @@ Future<pw.Document?> generatePdf(
     70 * PdfPageFormat.mm,
     50 * PdfPageFormat.mm,
   );
-  // const pageFormat = PdfPageFormat.a4;
 
   for (var person in peopleToPrint) {
     doc.addPage(
@@ -48,7 +47,7 @@ Future<pw.Document?> generatePdf(
 void directPrintPdf(
   BuildContext context,
   Printer? printer,
-  pw.Document document
+  pw.Document document,
 ) async {
   if (printer == null) {
     ScaffoldMessenger.of(
@@ -56,8 +55,6 @@ void directPrintPdf(
     ).showSnackBar(const SnackBar(content: Text('No printer selected.')));
     return;
   }
-  // final doc = await generatePdf(context, peopleToPrint);
-  // if (document == null) return;
 
   await Printing.directPrintPdf(
     printer: printer,
