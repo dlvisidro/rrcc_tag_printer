@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
@@ -37,8 +36,6 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-
-
 class _MyHomePageState extends State<MyHomePage> {
   Printer? _selectedPrinter;
   List<Printer> _printers = [];
@@ -70,8 +67,10 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _printers = printers;
         if (printers.isNotEmpty) {
-          _selectedPrinter = printers.firstWhere((p) => p.isDefault,
-              orElse: () => printers.first);
+          _selectedPrinter = printers.firstWhere(
+            (p) => p.isDefault,
+            orElse: () => printers.first,
+          );
         }
       });
     } catch (e) {
@@ -82,49 +81,53 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _directPrintPdf(Printer? printer, List<Person> peopleToPrint) async {
     if (printer == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No printer selected.'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('No printer selected.')));
       return;
     }
     final doc = await _generatePdf(peopleToPrint);
     if (doc == null) return;
 
     await Printing.directPrintPdf(
-        printer: printer,
-        onLayout: (PdfPageFormat format) async => doc.save());
+      printer: printer,
+      onLayout: (PdfPageFormat format) async => doc.save(),
+    );
   }
 
   Future<pw.Document?> _generatePdf(List<Person> peopleToPrint) async {
     if (peopleToPrint.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No people selected to print.'),
-        ),
+        const SnackBar(content: Text('No people selected to print.')),
       );
       return null;
     }
 
     final doc = pw.Document();
-    const pageFormat = PdfPageFormat(70 * PdfPageFormat.mm, 50 * PdfPageFormat.mm);
+    const pageFormat = PdfPageFormat(
+      70 * PdfPageFormat.mm,
+      50 * PdfPageFormat.mm,
+    );
     // const pageFormat = PdfPageFormat.a4;
 
     for (var person in peopleToPrint) {
-      doc.addPage(pw.Page(
+      doc.addPage(
+        pw.Page(
           pageFormat: pageFormat,
           build: (pw.Context context) {
             return pw.Center(
               child: pw.Column(
-                  mainAxisAlignment: pw.MainAxisAlignment.center,
-                  children: [
-                    pw.Text(person.firstName),
-                    pw.Text(person.lastName),
-                    pw.Text(person.churchName),
-                  ]),
+                mainAxisAlignment: pw.MainAxisAlignment.center,
+                children: [
+                  pw.Text(person.firstName),
+                  pw.Text(person.lastName),
+                  pw.Text(person.churchName),
+                ],
+              ),
             ); // Center
-          })); // Page
+          },
+        ),
+      ); // Page
     }
     return doc;
   }
@@ -171,7 +174,12 @@ class _MyHomePageState extends State<MyHomePage> {
     String churchName = _people[0].churchName;
     // final churches = _people.map((x) => x.churchName).toSet().toList();
     // print(churches);
-    final a = _people.map((x) => x.churchName).toSet().map((x) => DropdownMenuItem<String>(value: x, child: Text(x))).toList();
+    final a =
+        _people
+            .map((x) => x.churchName)
+            .toSet()
+            .map((x) => DropdownMenuItem<String>(value: x, child: Text(x)))
+            .toList();
     print(a);
     showDialog(
       context: context,
@@ -194,7 +202,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 items: a,
                 onChanged: (x) {
                   // print('setting churchname to $x');
-                  setState(() {churchName = x ?? '';});
+                  setState(() {
+                    churchName = x ?? '';
+                  });
                   // print('churchname: [$churchName]');
                 },
               ),
@@ -217,7 +227,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 final person = Person(
                   lastNameController.text,
                   firstNameController.text,
-                  churchName
+                  churchName,
                   // churchNameController.text,
                 );
                 _directPrintPdf(_selectedPrinter, [person]);
@@ -240,8 +250,10 @@ class _MyHomePageState extends State<MyHomePage> {
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: Container(
             alignment: Alignment.centerLeft,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
             child: Row(
               children: [
                 Expanded(
@@ -252,15 +264,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         _selectedPrinter = newValue;
                       });
                     },
-                    items: _printers.map<DropdownMenuItem<Printer>>((Printer printer) {
-                      return DropdownMenuItem<Printer>(
-                        value: printer,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Text(printer.name),
-                        ),
-                      );
-                    }).toList(),
+                    items:
+                        _printers.map<DropdownMenuItem<Printer>>((
+                          Printer printer,
+                        ) {
+                          return DropdownMenuItem<Printer>(
+                            value: printer,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(printer.name),
+                            ),
+                          );
+                        }).toList(),
                     isExpanded: true,
                     hint: const Text('Select a printer'),
                   ),
@@ -268,7 +283,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 const SizedBox(width: 32),
                 TextButton(
                   onPressed: () async {
-                    final selected = _people.where((p) => p.isSelected).toList();
+                    final selected =
+                        _people.where((p) => p.isSelected).toList();
                     final doc = await _generatePdf(selected);
                     if (doc != null) {
                       _showPrintPreview(doc);
@@ -279,7 +295,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 const SizedBox(width: 12),
                 TextButton(
                   onPressed: () {
-                    final selected = _people.where((p) => p.isSelected).toList();
+                    final selected =
+                        _people.where((p) => p.isSelected).toList();
                     _directPrintPdf(_selectedPrinter, selected);
                     for (final p in _people) {
                       p.isSelected = false;
