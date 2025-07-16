@@ -33,6 +33,12 @@ class PreviewDialogState extends State<PreviewDialog> {
       ),
       actions: <Widget>[
         TextButton(
+          child: const Text('Print'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        TextButton(
           child: const Text('Close'),
           onPressed: () {
             Navigator.of(context).pop();
