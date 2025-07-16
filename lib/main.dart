@@ -3,8 +3,9 @@ import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-import 'src/widgets/participant_list.dart';
 import 'src/models/person.dart';
+import 'src/widgets/participant_list.dart';
+import 'src/widgets/unregistered_dialog.dart';
 import 'src/utils/person_controller.dart';
 
 void main() {
@@ -168,74 +169,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _showUnregisteredDialog() {
-    final lastNameController = TextEditingController();
-    final firstNameController = TextEditingController();
-    // final churchNameController = TextEditingController();
-    String churchName = _people[0].churchName;
-    // final churches = _people.map((x) => x.churchName).toSet().toList();
-    // print(churches);
-    final a =
-        _people
-            .map((x) => x.churchName)
-            .toSet()
-            .map((x) => DropdownMenuItem<String>(value: x, child: Text(x)))
-            .toList();
-    print(a);
+    final churchNames = _people.map((x) => x.churchName).toSet().toList();
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Unregistered Participant'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: lastNameController,
-                decoration: const InputDecoration(labelText: 'Last Name'),
-              ),
-              TextField(
-                controller: firstNameController,
-                decoration: const InputDecoration(labelText: 'First Name'),
-              ),
-              DropdownButton<String>(
-                value: churchName,
-                items: a,
-                onChanged: (x) {
-                  // print('setting churchname to $x');
-                  setState(() {
-                    churchName = x ?? '';
-                  });
-                  // print('churchname: [$churchName]');
-                },
-              ),
-              // TextField(
-              //   controller: churchNameController,
-              //   decoration: const InputDecoration(labelText: 'Church Name'),
-              // ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Print'),
-              onPressed: () {
-                final person = Person(
-                  lastNameController.text,
-                  firstNameController.text,
-                  churchName,
-                  // churchNameController.text,
-                );
-                _directPrintPdf(_selectedPrinter, [person]);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
+        return UnregisteredDialog(churchNames: churchNames);
       },
     );
   }
