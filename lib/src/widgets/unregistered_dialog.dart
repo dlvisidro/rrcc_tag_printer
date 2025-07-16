@@ -79,7 +79,7 @@ class UnregisteredDialogState extends State<UnregisteredDialog> {
           },
         ),
         TextButton(
-          child: const Text('Print'),
+          child: const Text('Preview'),
           onPressed: () async {
             final person = Person(
               lastNameController.text,
