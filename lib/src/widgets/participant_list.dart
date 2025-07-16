@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../models/person.dart';
+// import '../models/person.dart';
+import '../utils/person_controller.dart';
 
 class ParticipantList extends StatelessWidget {
-  final List<Person> people;
-  const ParticipantList({required this.people, super.key});
+  final PersonController controller;
+  const ParticipantList({required this.controller, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +27,9 @@ class ParticipantList extends StatelessWidget {
           // Data Rows
           Expanded(
             child: ListView.builder(
-              itemCount: people.length,
+              itemCount: controller.persons.length,
               itemBuilder: (context, index) {
-                final person = people[index];
+                final person = controller.persons[index];
                 return InkWell(
                   onTap: () {
                     // setState(() {

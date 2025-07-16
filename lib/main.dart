@@ -6,6 +6,7 @@ import 'package:pdf/widgets.dart' as pw;
 
 import 'src/widgets/participant_list.dart';
 import 'src/models/person.dart';
+import 'src/utils/person_controller.dart';
 
 void main() {
   runApp(const MyApp());
@@ -53,11 +54,13 @@ class _MyHomePageState extends State<MyHomePage> {
     Person('Davis', 'Linda', 'Grace Fellowship'),
     Person('Rodriguez', 'James', 'Trinity Baptist'),
   ];
+  late final PersonController controller;
 
   @override
   void initState() {
     super.initState();
     _fetchPrinters();
+    controller = PersonController(persons: _people);
   }
 
   void _fetchPrinters() async {
@@ -295,7 +298,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      body: ParticipantList(people: _people),
+      body: ParticipantList(controller: controller),
     );
   }
 }
