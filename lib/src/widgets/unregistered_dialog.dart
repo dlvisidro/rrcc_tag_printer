@@ -58,10 +58,11 @@ class UnregisteredDialogState extends State<UnregisteredDialog> {
               // print('churchname: [$churchName]');
             },
           ),
-          if (churchName == null) TextField(
-            controller: churchNameManual,
-            decoration: const InputDecoration(labelText: 'Church Name'),
-          ),
+          if (churchName == null)
+            TextField(
+              controller: churchNameManual,
+              decoration: const InputDecoration(labelText: 'Church Name'),
+            ),
           // TextField(
           //   controller: churchNameController,
           //   decoration: const InputDecoration(labelText: 'Church Name'),
@@ -81,7 +82,7 @@ class UnregisteredDialogState extends State<UnregisteredDialog> {
             final person = Person(
               lastNameController.text,
               firstNameController.text,
-              churchName ?? churchNameManual.text
+              churchName ?? churchNameManual.text,
             );
             // final person = Person(
             //   lastNameController.text,

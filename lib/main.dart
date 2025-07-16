@@ -5,6 +5,7 @@ import 'package:pdf/widgets.dart' as pw;
 
 import 'src/models/person.dart';
 import 'src/widgets/participant_list.dart';
+import 'src/widgets/preview_dialog.dart';
 import 'src/widgets/unregistered_dialog.dart';
 import 'src/utils/person_controller.dart';
 import 'src/utils/printing.dart';
@@ -138,33 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Print Preview'),
-          content: SizedBox(
-            width: double.maxFinite,
-            height: 500,
-            child: InteractiveViewer(
-              panEnabled: false, // Set to false to prevent panning.
-              boundaryMargin: const EdgeInsets.all(0),
-              minScale: 0.1,
-              maxScale: 2.0,
-              child: PdfPreview(
-                build: (format) => doc.save(),
-                allowSharing: false,
-                allowPrinting: false,
-                pdfFileName: 'nametag.pdf',
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
+        return PreviewDialog(document: doc);
       },
     );
   }
