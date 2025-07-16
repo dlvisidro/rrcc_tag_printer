@@ -4,6 +4,9 @@ import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
+import 'src/widgets/participant_list.dart';
+import 'src/models/person.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -33,14 +36,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class Person {
-  Person(this.lastName, this.firstName, this.churchName, {this.isSelected = false});
 
-  final String lastName;
-  final String firstName;
-  final String churchName;
-  bool isSelected;
-}
 
 class _MyHomePageState extends State<MyHomePage> {
   Printer? _selectedPrinter;
@@ -299,58 +295,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          // Header Row
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: const Row(
-              children: [
-                SizedBox(width: 56),
-                Expanded(child: Text('Last Name', style: TextStyle(fontWeight: FontWeight.bold))),
-                Expanded(child: Text('First Name', style: TextStyle(fontWeight: FontWeight.bold))),
-                Expanded(child: Text('Church Name', style: TextStyle(fontWeight: FontWeight.bold))),
-              ],
-            ),
-          ),
-          const Divider(),
-          // Data Rows
-          Expanded(
-            child: ListView.builder(
-              itemCount: _people.length,
-              itemBuilder: (context, index) {
-                final person = _people[index];
-                return InkWell(
-                  onTap: () {
-                    setState(() {
-                      person.isSelected = !person.isSelected;
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                    child: Row(
-                      children: [
-                        Checkbox(
-                          value: person.isSelected,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              person.isSelected = value!;
-                            });
-                          },
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(child: Text(person.lastName)),
-                        Expanded(child: Text(person.firstName)),
-                        Expanded(child: Text(person.churchName)),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+      body: ParticipantList(people: _people),
     );
   }
 }
