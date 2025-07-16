@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../models/person.dart';
+import '../utils/printing.dart';
+import '../widgets/preview_dialog.dart';
 
 class UnregisteredDialog extends StatefulWidget {
   final List<String> churchNames;
@@ -78,20 +80,23 @@ class UnregisteredDialogState extends State<UnregisteredDialog> {
         ),
         TextButton(
           child: const Text('Print'),
-          onPressed: () {
+          onPressed: () async {
             final person = Person(
               lastNameController.text,
               firstNameController.text,
               churchName ?? churchNameManual.text,
             );
-            // final person = Person(
-            //   lastNameController.text,
-            //   firstNameController.text,
-            //   churchName,
-            //   // churchNameController.text,
-            // );
-            // _directPrintPdf(_selectedPrinter, [person]);
-            Navigator.of(context).pop();
+            final doc = await generatePdf(context, [person]);
+            if (doc != null) {
+              if (context.mounted) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return PreviewDialog(document: doc);
+                  },
+                );
+              }
+            }
           },
         ),
       ],
