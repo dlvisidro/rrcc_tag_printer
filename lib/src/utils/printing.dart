@@ -48,7 +48,7 @@ Future<pw.Document?> generatePdf(
 void directPrintPdf(
   BuildContext context,
   Printer? printer,
-  List<Person> peopleToPrint,
+  pw.Document document
 ) async {
   if (printer == null) {
     ScaffoldMessenger.of(
@@ -56,11 +56,11 @@ void directPrintPdf(
     ).showSnackBar(const SnackBar(content: Text('No printer selected.')));
     return;
   }
-  final doc = await generatePdf(context, peopleToPrint);
-  if (doc == null) return;
+  // final doc = await generatePdf(context, peopleToPrint);
+  // if (document == null) return;
 
   await Printing.directPrintPdf(
     printer: printer,
-    onLayout: (PdfPageFormat format) async => doc.save(),
+    onLayout: (PdfPageFormat format) async => document.save(),
   );
 }

@@ -155,10 +155,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 const SizedBox(width: 12),
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     final selected =
                         _people.where((p) => p.isSelected).toList();
-                    directPrintPdf(context, _selectedPrinter, selected);
+                    final doc = await generatePdf(context, selected);
+                    if (doc != null && context.mounted) {
+                      directPrintPdf(context, _selectedPrinter, doc);
+                    }
                     for (final p in _people) {
                       p.isSelected = false;
                     }
