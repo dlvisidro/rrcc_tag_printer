@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:printing/printing.dart';
-import 'package:pdf/pdf.dart';
+// import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import 'src/models/person.dart';
 import 'src/widgets/participant_list.dart';
 import 'src/widgets/unregistered_dialog.dart';
 import 'src/utils/person_controller.dart';
+import 'src/utils/printing.dart';
 
 void main() {
   runApp(const MyApp());
@@ -80,58 +81,58 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _directPrintPdf(Printer? printer, List<Person> peopleToPrint) async {
-    if (printer == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('No printer selected.')));
-      return;
-    }
-    final doc = await _generatePdf(peopleToPrint);
-    if (doc == null) return;
+  // void _directPrintPdf(Printer? printer, List<Person> peopleToPrint) async {
+  //   if (printer == null) {
+  //     ScaffoldMessenger.of(
+  //       context,
+  //     ).showSnackBar(const SnackBar(content: Text('No printer selected.')));
+  //     return;
+  //   }
+  //   final doc = await generatePdf(context, peopleToPrint);
+  //   if (doc == null) return;
 
-    await Printing.directPrintPdf(
-      printer: printer,
-      onLayout: (PdfPageFormat format) async => doc.save(),
-    );
-  }
+  //   await Printing.directPrintPdf(
+  //     printer: printer,
+  //     onLayout: (PdfPageFormat format) async => doc.save(),
+  //   );
+  // }
 
-  Future<pw.Document?> _generatePdf(List<Person> peopleToPrint) async {
-    if (peopleToPrint.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No people selected to print.')),
-      );
-      return null;
-    }
+  // Future<pw.Document?> _generatePdf(List<Person> peopleToPrint) async {
+  //   if (peopleToPrint.isEmpty) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('No people selected to print.')),
+  //     );
+  //     return null;
+  //   }
 
-    final doc = pw.Document();
-    const pageFormat = PdfPageFormat(
-      70 * PdfPageFormat.mm,
-      50 * PdfPageFormat.mm,
-    );
-    // const pageFormat = PdfPageFormat.a4;
+  //   final doc = pw.Document();
+  //   const pageFormat = PdfPageFormat(
+  //     70 * PdfPageFormat.mm,
+  //     50 * PdfPageFormat.mm,
+  //   );
+  //   // const pageFormat = PdfPageFormat.a4;
 
-    for (var person in peopleToPrint) {
-      doc.addPage(
-        pw.Page(
-          pageFormat: pageFormat,
-          build: (pw.Context context) {
-            return pw.Center(
-              child: pw.Column(
-                mainAxisAlignment: pw.MainAxisAlignment.center,
-                children: [
-                  pw.Text(person.firstName),
-                  pw.Text(person.lastName),
-                  pw.Text(person.churchName),
-                ],
-              ),
-            ); // Center
-          },
-        ),
-      ); // Page
-    }
-    return doc;
-  }
+  //   for (var person in peopleToPrint) {
+  //     doc.addPage(
+  //       pw.Page(
+  //         pageFormat: pageFormat,
+  //         build: (pw.Context context) {
+  //           return pw.Center(
+  //             child: pw.Column(
+  //               mainAxisAlignment: pw.MainAxisAlignment.center,
+  //               children: [
+  //                 pw.Text(person.firstName),
+  //                 pw.Text(person.lastName),
+  //                 pw.Text(person.churchName),
+  //               ],
+  //             ),
+  //           ); // Center
+  //         },
+  //       ),
+  //     ); // Page
+  //   }
+  //   return doc;
+  // }
 
   void _showPrintPreview(pw.Document doc) {
     showDialog(
@@ -223,7 +224,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () async {
                     final selected =
                         _people.where((p) => p.isSelected).toList();
-                    final doc = await _generatePdf(selected);
+                    final doc = await generatePdf(context, selected);
                     if (doc != null) {
                       _showPrintPreview(doc);
                     }
@@ -235,7 +236,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () {
                     final selected =
                         _people.where((p) => p.isSelected).toList();
-                    _directPrintPdf(_selectedPrinter, selected);
+                    directPrintPdf(context, _selectedPrinter, selected);
                     for (final p in _people) {
                       p.isSelected = false;
                     }

@@ -83,7 +83,6 @@ class UnregisteredDialogState extends State<UnregisteredDialog> {
               firstNameController.text,
               churchName ?? churchNameManual.text
             );
-            print(person);
             // final person = Person(
             //   lastNameController.text,
             //   firstNameController.text,
