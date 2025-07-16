@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../models/person.dart';
+
 class UnregisteredDialog extends StatefulWidget {
   final List<String> churchNames;
   const UnregisteredDialog({required this.churchNames, super.key});
@@ -11,12 +13,15 @@ class UnregisteredDialog extends StatefulWidget {
 class UnregisteredDialogState extends State<UnregisteredDialog> {
   final lastNameController = TextEditingController();
   final firstNameController = TextEditingController();
-  String churchName = '';
+  final churchNameManual = TextEditingController();
+  final List<String?> churchNames = [null];
+  String? churchName;
 
   @override
   void initState() {
     super.initState();
-    churchName = widget.churchNames.isEmpty ? '' : widget.churchNames[0];
+    churchNames.addAll(widget.churchNames);
+    churchName = churchNames[0];
   }
 
   @override
@@ -34,21 +39,28 @@ class UnregisteredDialogState extends State<UnregisteredDialog> {
             controller: firstNameController,
             decoration: const InputDecoration(labelText: 'First Name'),
           ),
-          DropdownButton<String>(
+          DropdownButton<String?>(
             value: churchName,
             items:
-                widget.churchNames
+                churchNames
                     .map(
-                      (x) => DropdownMenuItem<String>(value: x, child: Text(x)),
+                      (x) => DropdownMenuItem<String?>(
+                        value: x,
+                        child: Text(x ?? 'input manually'),
+                      ),
                     )
                     .toList(),
             onChanged: (x) {
               // print('setting churchname to $x');
               setState(() {
-                churchName = x ?? '';
+                churchName = x;
               });
               // print('churchname: [$churchName]');
             },
+          ),
+          if (churchName == null) TextField(
+            controller: churchNameManual,
+            decoration: const InputDecoration(labelText: 'Church Name'),
           ),
           // TextField(
           //   controller: churchNameController,
@@ -66,6 +78,12 @@ class UnregisteredDialogState extends State<UnregisteredDialog> {
         TextButton(
           child: const Text('Print'),
           onPressed: () {
+            final person = Person(
+              lastNameController.text,
+              firstNameController.text,
+              churchName ?? churchNameManual.text
+            );
+            print(person);
             // final person = Person(
             //   lastNameController.text,
             //   firstNameController.text,
