@@ -165,12 +165,15 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  @override
   void _showUnregisteredDialog() {
     final lastNameController = TextEditingController();
     final firstNameController = TextEditingController();
-    final churchNameController = TextEditingController();
-
+    // final churchNameController = TextEditingController();
+    String churchName = _people[0].churchName;
+    // final churches = _people.map((x) => x.churchName).toSet().toList();
+    // print(churches);
+    final a = _people.map((x) => x.churchName).toSet().map((x) => DropdownMenuItem<String>(value: x, child: Text(x))).toList();
+    print(a);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -187,10 +190,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 controller: firstNameController,
                 decoration: const InputDecoration(labelText: 'First Name'),
               ),
-              TextField(
-                controller: churchNameController,
-                decoration: const InputDecoration(labelText: 'Church Name'),
+              DropdownButton<String>(
+                value: churchName,
+                items: a,
+                onChanged: (x) {
+                  // print('setting churchname to $x');
+                  setState(() {churchName = x ?? '';});
+                  // print('churchname: [$churchName]');
+                },
               ),
+              // TextField(
+              //   controller: churchNameController,
+              //   decoration: const InputDecoration(labelText: 'Church Name'),
+              // ),
             ],
           ),
           actions: <Widget>[
@@ -206,7 +218,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 final person = Person(
                   lastNameController.text,
                   firstNameController.text,
-                  churchNameController.text,
+                  churchName
+                  // churchNameController.text,
                 );
                 _directPrintPdf(_selectedPrinter, [person]);
                 Navigator.of(context).pop();
