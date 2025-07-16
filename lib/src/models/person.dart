@@ -10,4 +10,9 @@ class Person {
   final String firstName;
   final String churchName;
   bool isSelected;
+
+  @override
+  String toString() {
+    return 'Person(lastName: $lastName, firstName: $firstName, churchName: $churchName, isSelected: $isSelected)';
+  }
 }
