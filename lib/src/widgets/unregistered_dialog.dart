@@ -1,0 +1,82 @@
+import 'package:flutter/material.dart';
+
+class UnregisteredDialog extends StatefulWidget {
+  final List<String> churchNames;
+  const UnregisteredDialog({required this.churchNames, super.key});
+
+  @override
+  UnregisteredDialogState createState() => UnregisteredDialogState();
+}
+
+class UnregisteredDialogState extends State<UnregisteredDialog> {
+  final lastNameController = TextEditingController();
+  final firstNameController = TextEditingController();
+  String churchName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    churchName = widget.churchNames.isEmpty ? '' : widget.churchNames[0];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Unregistered Participant'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: lastNameController,
+            decoration: const InputDecoration(labelText: 'Last Name'),
+          ),
+          TextField(
+            controller: firstNameController,
+            decoration: const InputDecoration(labelText: 'First Name'),
+          ),
+          DropdownButton<String>(
+            value: churchName,
+            items:
+                widget.churchNames
+                    .map(
+                      (x) => DropdownMenuItem<String>(value: x, child: Text(x)),
+                    )
+                    .toList(),
+            onChanged: (x) {
+              // print('setting churchname to $x');
+              setState(() {
+                churchName = x ?? '';
+              });
+              // print('churchname: [$churchName]');
+            },
+          ),
+          // TextField(
+          //   controller: churchNameController,
+          //   decoration: const InputDecoration(labelText: 'Church Name'),
+          // ),
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: const Text('Cancel'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        TextButton(
+          child: const Text('Print'),
+          onPressed: () {
+            // final person = Person(
+            //   lastNameController.text,
+            //   firstNameController.text,
+            //   churchName,
+            //   // churchNameController.text,
+            // );
+            // _directPrintPdf(_selectedPrinter, [person]);
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
+  }
+}
