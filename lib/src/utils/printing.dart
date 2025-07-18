@@ -59,5 +59,7 @@ void directPrintPdf(
   await Printing.directPrintPdf(
     printer: printer,
     onLayout: (PdfPageFormat format) async => document.save(),
+    format: PdfPageFormat(70 * PdfPageFormat.mm, 50 * PdfPageFormat.mm),
+    forceCustomPrintPaper: true,
   );
 }
